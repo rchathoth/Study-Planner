@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Study Planner</title>
+    
+    <!-- Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Load Custom Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="app-container">
+        <!-- Header -->
+        <header>
+            <h1>AI Study Planner</h1>
+            <p>Let's build the perfect study plan for your upcoming test.</p>
+        </header>
+
+        <main class="card">
+
+            <!-- Section 1: User Input -->
+            <section id="input-section">
+                <h2>1. Enter Your Test Details</h2>
+                <form id="study-form">
+                    <div>
+                        <label for="test-name">Test Name / Subject</label>
+                        <input type="text" id="test-name" placeholder="e.g., Biology Midterm">
+                    </div>
+                    <div>
+                        <label for="test-date">Test Date</label>
+                        <input type="date" id="test-date">
+                    </div>
+                    <div>
+                        <label for="study-materials">Study Materials (Topics, Chapters, Notes)</label>
+                        <textarea id="study-materials" rows="5" placeholder="e.g., Chapters 4-7, cell division, photosynthesis..."></textarea>
+                    </div>
+                    <button type="submit" id="generate-plan-btn">
+                        Generate Study Plan
+                    </button>
+                </form>
+            </section>
+
+            <!-- Section 2: Study Plan Output -->
+            <section id="plan-section">
+                <h2>2. Your Spaced Repetition Plan</h2>
+                <div id="study-plan-output" class="output-box">
+                    Your personalized study plan will appear here.
+                </div>
+            </section>
+
+            <!-- Section 3: Practice Test Output -->
+            <section id="test-section">
+                <h2>3. Generate a Practice Test</h2>
+                <button type="button" id="generate-test-btn" disabled>
+                    Create Practice Test
+                </button>
+                <div id="practice-test-output" class="output-box">
+                    Your practice test will appear here once you've generated a plan.
+                </div>
+            </section>
+
+        </main>
+    </div>
+    
+    <!-- Load Application Script -->
+    <script src="app.js" type="module"></script>
+</body>
+</html>
+
