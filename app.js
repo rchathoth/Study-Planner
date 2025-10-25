@@ -98,9 +98,23 @@ function renderCardsForDate(date) {
   cardList.innerHTML = '';
   const cards = appState.schedule[date];
   if (!cards) return;
-  cards.forEach(c => {
+
+  cards.forEach((c, index) => {
     const li = document.createElement('li');
     li.textContent = c.prompt;
+
+    if (c.done) {
+      li.style.textDecoration = 'line-through';
+      li.style.color = 'gray';
+    }
+
+    li.addEventListener('click', () => {
+      c.done = !c.done; // flip true/false
+      saveState(); // persist
+      renderCardsForDate(date); // re-render this day’s cards
+    });
+
     cardList.appendChild(li);
   });
 }
+
