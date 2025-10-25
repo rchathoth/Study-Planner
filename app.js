@@ -1,11 +1,4 @@
-// --- CONFIGURATION IMPORT ---
-// NOTE: This line imports the API_KEY from a local file named 'config.js'.
-// This ensures your key is kept off GitHub, as 'config.js' will be in your .gitignore.
 import { API_KEY } from './config.js'; 
-
-// --- Gemini API Configuration ---
-// The API_KEY is now securely imported.
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
 
 // --- DOM Elements ---
 const studyForm = document.getElementById('study-form');
@@ -73,61 +66,9 @@ function validateInputs() {
     return null;
 }
 
-/**
- * Calls the Gemini API with exponential backoff.
- * @param {object} payload - The payload to send to the API.
- * @param {number} maxRetries - Maximum number of retries.
- * @returns {Promise<object>} - The API response.
- */
-async function callApiWithBackoff(payload, maxRetries = 3) {
-    let delay = 1000; // Start with 1 second
-    for (let i = 0; i < maxRetries; i++) {
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
 
-            if (!response.ok) {
-                throw new Error(`API Error: ${response.status} ${response.statusText}`);
-            }
-            
-            const result = await response.json();
-
-            // Check for safety ratings or blocked content
-            if (result.candidates?.[0]?.finishReason === 'SAFETY') {
-                throw new Error("The request was blocked due to safety settings.");
-            }
-            if (!result.candidates?.[0]?.content?.parts?.[0]?.text) {
-                    throw new Error("Received an invalid or empty response from the AI.");
-            }
-
-            return result;
-
-        } catch (error) {
-            if (i === maxRetries - 1) {
-                throw error; // Throw error on last retry
-            }
-            // Don't log to console
-            await new Promise(resolve => setTimeout(resolve, delay));
-            delay *= 2; // Exponential backoff
-        }
-    }
-}
 
 // --- Core Logic Functions ---
-
-/**
- * Handles the "Generate Study Plan" button click.
- */
-async function handleGeneratePlan(event) {
-    event.preventDefault();
-    const errorMessage = validateInputs();
-    if (errorMessage) {
-        displayError(planOutput, errorMessage);
-        return;
-    }
 
     // Save state for practice test
     currentTestName = testNameInput.value;
@@ -181,19 +122,13 @@ async function handleGeneratePlan(event) {
         required: ["studySessions", "rationale"]
     };
 
-    const payload = {
-        contents: [{ parts: [{ text: prompt }] }],
-        systemInstruction: { parts: [{ text: systemInstruction }] },
-        generationConfig: {
-            responseMimeType: "application/json",
-            responseSchema: schema,
-        }
-    };
-
     try {
-        const result = await callApiWithBackoff(payload);
-        const jsonText = result.candidates[0].content.parts[0].text;
-        const planData = JSON.parse(jsonText);
+        const result = await callApiWithBackoff([
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: prompt }
+        ]);
+        
+        const planData = JSON.parse(result.text());
         displayStudyPlan(planData);
         generateTestBtn.disabled = false; // Enable test generation
         testOutput.innerHTML = 'Your practice test will appear here once you click the button above.';
@@ -278,18 +213,12 @@ async function handleGenerateTest() {
         4. Below the separator, provide the correct answers for all 10 questions.
     `;
 
-    const payload = {
-        contents: [{ parts: [{ text: prompt }] }],
-        systemInstruction: { parts: [{ text: systemInstruction }] },
-        generationConfig: {
-            temperature: 0.7,
-        }
-    };
-
     try {
-        const result = await callApiWithBackoff(payload);
-        const testContent = result.candidates[0].content.parts[0].text;
-        displayPracticeTest(testContent);
+        const result = await callApiWithBackoff([
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: prompt }
+        ]);
+        displayPracticeTest(result.text());
     } catch (error) {
         console.error("Error generating practice test:", error);
         displayError(testOutput, `Failed to generate test: ${error.message}. Please try again.`);
