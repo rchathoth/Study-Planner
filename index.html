@@ -1,77 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Study Planner</title>
-    
-    <!-- Google Font (Inter) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Load Custom Stylesheet -->
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Study Planner</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <header>
+    <h1>Study Planner</h1>
+  </header>
 
-    <div id="app-container">
-        <!-- Header -->
-        <header>
-            <h1>AI Study Planner</h1>
-            <p>Let's build the perfect study plan for your upcoming test.</p>
-        </header>
+  <main>
+    <section id="setup">
+      <h2>Setup</h2>
+      <label for="testDate">Test Date:</label>
+      <input type="date" id="testDate">
 
-        <main class="card">
+      <label for="materials">Study Materials (one per line):</label>
+      <textarea id="materials" rows="6" placeholder="Topic 1&#10;Topic 2&#10;Topic 3"></textarea>
 
-            <!-- Section 1: User Input -->
-            <section id="input-section">
-                <h2>1. Enter Your Test Details</h2>
-                <form id="study-form">
-                    <div>
-                        <label for="test-name">Test Name / Subject</label>
-                        <input type="text" id="test-name" placeholder="e.g., Biology Midterm">
-                    </div>
-                    <div>
-                        <label for="test-date">Test Date</label>
-                        <input type="date" id="test-date">
-                    </div>
-                    <div>
-                        <label for="study-materials">Study Materials (Topics, Chapters, Notes)</label>
-                        <textarea id="study-materials" rows="5" placeholder="e.g., Chapters 4-7, cell division, photosynthesis..."></textarea>
-                    </div>
-                    <button type="submit" id="generate-plan-btn">
-                        Generate Study Plan
-                    </button>
-                </form>
-            </section>
+      <button id="generate">Generate Schedule</button>
+    </section>
 
-            <!-- Section 2: Study Plan Output -->
-            <section id="plan-section">
-                <h2>2. Your Spaced Repetition Plan</h2>
-                <div id="study-plan-output" class="output-box">
-                    Your personalized study plan will appear here.
-                </div>
-            </section>
+    <section id="schedule">
+      <h2>Study Schedule</h2>
+      <ul id="scheduleList"></ul>
+    </section>
 
-            <!-- Section 3: Practice Test Output -->
-            <section id="test-section">
-                <h2>3. Generate a Practice Test</h2>
-                <button type="button" id="generate-test-btn" disabled>
-                    Create Practice Test
-                </button>
-                <div id="practice-test-output" class="output-box">
-                    Your practice test will appear here once you've generated a plan.
-                </div>
-            </section>
+    <section id="cards">
+      <h2>Cards for Selected Day</h2>
+      <ul id="cardList"></ul>
+    </section>
+  </main>
 
-        </main>
-    </div>
-    
-    <script src="app.js" type="module"></script>
+  <footer>
+    <p>Study Planner © 2025</p>
+  </footer>
 
-    <h2>hackathon</h2>
+  <script src="app.js"></script>
 </body>
 </html>
-
-
